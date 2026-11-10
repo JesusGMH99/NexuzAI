@@ -1,0 +1,13 @@
+# Secretos
+.env
+.env.*
+!.env.example
+
+# Python
+backend/.venv/
+__pycache__/
+*.pyc
+
+# Sistema
+.DS_Store
+Thumbs.db

@@ -1,0 +1,140 @@
+.nz-core {
+  position: relative;
+  margin: 0 auto;
+  --nz-main: #6a2abe;
+  --nz-glow: #461690;
+  filter: drop-shadow(0 0 28px var(--nz-glow)) brightness(0.9);
+  transition: filter 0.7s ease, transform 0.6s ease;
+}
+
+.nz-core svg {
+  overflow: visible;
+  display: block;
+}
+
+/* Todo gira alrededor del centro (0,0) del SVG */
+.nz-core svg g,
+.nz-core svg circle {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+
+/* Los giros, el latido de las aspas, la pupila, los destellos y la corrupción
+   se animan por JS (NexuzCore.tsx) para que cambien sin saltos. */
+
+.nz-aura { animation: nz-breathe 5s ease-in-out infinite; }
+.nz-ripples { animation: nz-breathe 6s ease-in-out infinite; }
+.nz-ring-pulse { animation: nz-breathe 3s ease-in-out infinite; }
+
+.nz-wave {
+  opacity: 0;
+  stroke-width: 3px;
+}
+
+/* Cada estado cambia brillo y resplandor: se nota aunque el núcleo esté pequeño */
+.nz-listening {
+  filter: drop-shadow(0 0 42px var(--nz-glow)) brightness(1.05);
+}
+.nz-thinking {
+  filter: drop-shadow(0 0 52px var(--nz-glow)) brightness(1.15);
+}
+.nz-speaking {
+  filter: drop-shadow(0 0 60px var(--nz-glow)) brightness(1.3);
+}
+.nz-important {
+  filter: drop-shadow(0 0 80px var(--nz-glow)) brightness(1.6);
+}
+
+.nz-listening:not(.nz-compact-core) {
+  transform: scale(1.03);
+}
+
+/* RESPUESTA IMPORTANTE: ondas de energía */
+.nz-important .nz-wave-a { animation: nz-wave 2.2s ease-out infinite; }
+.nz-important .nz-wave-b { animation: nz-wave 2.2s ease-out 1.1s infinite; }
+
+/* Astillas de la corrupción avanzada */
+.nz-shard {
+  animation: nz-shard 2.4s ease-out infinite;
+}
+
+/* MODO LIGERO (pantallas pequeñas o equipos modestos): sin sombras pesadas */
+.nz-core.nz-lite { filter: brightness(0.95); }
+.nz-core.nz-lite.nz-thinking { filter: brightness(1.1); }
+.nz-core.nz-lite.nz-speaking { filter: brightness(1.25); }
+.nz-core.nz-lite.nz-important { filter: brightness(1.5); }
+
+@keyframes nz-breathe {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+@keyframes nz-wave {
+  0% { opacity: 0.9; transform: scale(0.7); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+@keyframes nz-shard {
+  0% { transform: translateY(0); opacity: 0.95; }
+  100% { transform: translateY(-26px); opacity: 0; }
+}
+
+/* ---------- ESCENARIO DEL NÚCLEO (se encoge y queda fijo arriba cuando hay chat) ---------- */
+.core-stage.nz-stage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 380px;
+  min-height: 0;
+  padding: 0;
+  overflow: visible;
+  pointer-events: none;
+  transition: height 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nz-stage-inner {
+  width: 360px;
+  height: 360px;
+  flex: none;
+  transform-origin: top center;
+  transform: scale(1);
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.core-stage.nz-stage.nz-compact {
+  height: 200px;
+}
+
+.nz-compact .nz-stage-inner {
+  transform: scale(0.52);
+}
+
+@media (max-width: 640px) {
+  .core-stage.nz-stage {
+    height: 300px;
+  }
+  .nz-stage-inner {
+    transform: scale(0.8);
+  }
+  .core-stage.nz-stage.nz-compact {
+    height: 150px;
+  }
+  .nz-compact .nz-stage-inner {
+    transform: scale(0.4);
+  }
+}
+
+/* ---------- ACCESIBILIDAD: reducir movimiento ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .nz-aura,
+  .nz-ripples,
+  .nz-ring-pulse,
+  .nz-shard,
+  .nz-important .nz-wave-a,
+  .nz-important .nz-wave-b {
+    animation: none !important;
+  }
+  .nz-core,
+  .nz-stage-inner,
+  .core-stage.nz-stage {
+    transition: none;
+  }
+}
